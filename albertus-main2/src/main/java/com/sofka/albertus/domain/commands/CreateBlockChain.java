@@ -19,4 +19,8 @@ public class CreateBlockChain extends Command {
     public String getBlockChainId() {
         return BlockChainId;
     }
+
+    public String getBlockChainName() {
+        return blockChainName;
+    }
 }

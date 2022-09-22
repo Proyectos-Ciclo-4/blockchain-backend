@@ -3,7 +3,6 @@ package com.sofka.albertus.domain;
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
 import com.sofka.albertus.domain.events.BlockChainCreated;
-import com.sofka.albertus.domain.commands.CreateBlock;
 import com.sofka.albertus.domain.entity.Application;
 import com.sofka.albertus.domain.entity.Invoice;
 import com.sofka.albertus.domain.entity.User;
@@ -13,6 +12,7 @@ import com.sofka.albertus.domain.values.Block;
 import com.sofka.albertus.domain.values.BlockChainId;
 import com.sofka.albertus.domain.values.Name;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -48,7 +48,13 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         appendChange(new GenesisBlockCreated(data)).apply();
     }
 
+    public void CreateBlock(String data, String applicationId, String hash, Instant timeStamp, Integer nonce, Boolean hasOverCharge,  String previousHash){
+        Objects.requireNonNull(data);
+        Objects.requireNonNull(applicationId);
+        appendChange(new BlockCreated(applicationId, data, hash, timeStamp, nonce, hasOverCharge, previousHash)).apply();
+    }
 
-
-
+    public List<Block> getBlocks() {
+        return blocks;
+    }
 }
