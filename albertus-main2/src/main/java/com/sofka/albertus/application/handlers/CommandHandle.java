@@ -3,6 +3,8 @@ package com.sofka.albertus.application.handlers;
 
 import co.com.sofka.domain.generic.DomainEvent;
 import com.sofka.albertus.business.usecases.CreateBlockChainUseCase;
+import com.sofka.albertus.business.usecases.CreateBlockUseCase;
+import com.sofka.albertus.domain.commands.CreateBlock;
 import com.sofka.albertus.domain.commands.CreateBlockChain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,7 @@ public class CommandHandle {
   @Bean
   public RouterFunction<ServerResponse> create(CreateBlockChainUseCase useCase) {
     return route(
-        POST("/create/block").and(accept(MediaType.APPLICATION_JSON)),
+        POST("/create/blockchain").and(accept(MediaType.APPLICATION_JSON)),
         request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromPublisher(
                 useCase.apply(request.bodyToMono(CreateBlockChain.class)),
@@ -31,6 +33,16 @@ public class CommandHandle {
     );
   }
 
+  @Bean
+  public RouterFunction<ServerResponse> createBlock(CreateBlockUseCase useCase) {
+    return route(
+            POST("/create/block").and(accept(MediaType.APPLICATION_JSON)),
+            request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromPublisher(
+                            useCase.apply(request.bodyToMono(CreateBlock.class)),
+                            DomainEvent.class))
+    );
+  }
 
 }
 

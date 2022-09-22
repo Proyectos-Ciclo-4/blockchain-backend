@@ -45,7 +45,7 @@ public class CreateBlockUseCase {
                     BlockChain blockChain = BlockChain.from(BlockChainId.of(command.getBlockChainID()),eventsFromRepository);
                     //TODO Pendiente la validación de que haya 5 bloques creados en el día
                     //TODO para marcar el bloque con hasOverCharge=true, por el momento es false
-                    String previousHash = blockChain.getBlocks().get(blockChain.getBlocks().size()-1).value().previousHash();
+                    String previousHash = blockChain.getBlocks().get(blockChain.getBlocks().size()-1).value().hash();
                     String nonce = String.valueOf((int) (Math.random() * 10000));
                     String data = command.getData();
                     Instant instant = Instant.now();
