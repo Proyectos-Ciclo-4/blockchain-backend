@@ -37,7 +37,7 @@ public class CreateBlockUseCase {
     public Flux<DomainEvent> apply(Mono<CreateBlock> createBlockCommand){
 
         //TODO Validar que el Application ID si exista en la base de datos, PUEDE SER con el
-        //TODO Authorization en la validación JWT
+
 
         return createBlockCommand.flatMapMany(command -> repository.findById(command.getBlockChainID())
                 .collectList()

@@ -4,11 +4,11 @@ import co.com.sofka.domain.generic.Command;
 
 public class CreateBlockChain extends Command {
 
-    private  String BlockChainId;
+    private  String blockChainId;
     private String blockChainName;
 
     public CreateBlockChain(String blockChainId,String blockChainName) {
-        BlockChainId = blockChainId;
+        this.blockChainId = blockChainId;
         this.blockChainName = blockChainName;
     }
 
@@ -17,7 +17,7 @@ public class CreateBlockChain extends Command {
     }
 
     public String getBlockChainId() {
-        return BlockChainId;
+        return blockChainId;
     }
 
     public String getBlockChainName() {
