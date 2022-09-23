@@ -28,4 +28,8 @@ public class CreateBlock extends Command {
     public String getBlockChainID() {
         return blockChainID;
     }
+
+    public void setApplicationID(String applicationID) {
+        this.applicationID = applicationID;
+    }
 }

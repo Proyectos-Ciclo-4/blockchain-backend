@@ -2,6 +2,7 @@ package com.sofka.albertus.application.handlers;
 
 
 import co.com.sofka.domain.generic.DomainEvent;
+import com.sofka.albertus.application.helpers.AuthorizationProvider;
 import com.sofka.albertus.business.usecases.CreateBlockChainUseCase;
 import com.sofka.albertus.business.usecases.CreateBlockUseCase;
 import com.sofka.albertus.domain.commands.CreateBlock;
@@ -20,7 +21,12 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 public class CommandHandle {
+  private final AuthorizationProvider authorizationProvider;
 
+
+  public CommandHandle(AuthorizationProvider authorizationProvider) {
+    this.authorizationProvider = authorizationProvider;
+  }
 
   @Bean
   public RouterFunction<ServerResponse> create(CreateBlockChainUseCase useCase) {
@@ -39,7 +45,7 @@ public class CommandHandle {
             POST("/create/block").and(accept(MediaType.APPLICATION_JSON)),
             request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                     .body(BodyInserters.fromPublisher(
-                            useCase.apply(request.bodyToMono(CreateBlock.class)),
+                            useCase.apply(authorizationProvider.getAuthorization(request.bodyToMono(CreateBlock.class), request.headers())),
                             DomainEvent.class))
     );
   }
