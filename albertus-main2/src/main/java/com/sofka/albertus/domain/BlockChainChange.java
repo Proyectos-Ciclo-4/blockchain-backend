@@ -24,9 +24,9 @@ public class BlockChainChange extends EventChange {
 
         apply((BlockChainCreated event) -> {
             blockChain.users = new HashSet<>();
-            blockChain.blocks = new ArrayList<>();
-            blockChain.applications = new ArrayList<>();
-            blockChain.invoices = new ArrayList<>();
+            blockChain.blocks = event.getBlocks();
+            blockChain.applications = event.getApplications();
+            blockChain.invoices = event.getInvoices();
             blockChain.blockChainName = new Name(event.getBlockChainName());
         });
 
