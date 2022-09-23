@@ -5,6 +5,7 @@ package com.sofka.albertusview.application.handlers;
 import co.com.sofka.domain.generic.DomainEvent;
 import com.google.gson.Gson;
 import com.sofka.albertusview.application.adapters.bus.Notification;
+import com.sofka.albertusview.business.usecases.UpdateViewUseCase;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Consumer;

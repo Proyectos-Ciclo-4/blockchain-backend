@@ -1,14 +1,16 @@
 package com.sofka.albertusview.business.gateways;
 
 
-import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.CommentViewModel;
-import com.posada.santiago.betapostsandcomments.APPRENTICESbetapostscomments.business.gateways.model.PostViewModel;
-import reactor.core.publisher.Flux;
+import com.sofka.albertusview.business.gateways.models.BlockChainModel;
+
+import com.sofka.albertusview.business.gateways.models.BlockViewModel;
+import com.sofka.albertusview.domain.values.Block;
 import reactor.core.publisher.Mono;
 
 public interface DomainViewRepository {
-    Mono<PostViewModel> findByAggregateId(String aggregateId);
-    Flux<PostViewModel> findAllPosts();
-    Mono<PostViewModel> saveNewPost(PostViewModel post);
-    Mono<PostViewModel> addCommentToPost(CommentViewModel comment);
+    Mono<BlockChainModel> findByAggregateId(String aggregateId);
+    Mono<BlockChainModel> saveNewBlockChain(BlockChainModel blockChainModel);
+
+    Mono<BlockChainModel> addBlockToBlockChain(BlockViewModel block);
+
 }

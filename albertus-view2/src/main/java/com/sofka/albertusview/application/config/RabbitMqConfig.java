@@ -2,6 +2,7 @@ package com.sofka.albertusview.application.config;
 
 
 
+import com.sofka.albertusview.application.handlers.QueueHandler;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
