@@ -1,6 +1,6 @@
 package com.sofka.albertus.application.helpers;
 
-import com.sofka.albertus.domain.commands.CreateBlock;
+import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
 
 import static org.springframework.web.reactive.function.server.ServerRequest.Headers;
 

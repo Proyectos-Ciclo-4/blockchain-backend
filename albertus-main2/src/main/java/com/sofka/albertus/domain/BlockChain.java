@@ -26,8 +26,11 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
     protected List<Invoice> invoices;
 
 
+    public List<Application> getApplications() {
+        return applications;
+    }
 
-    public BlockChain(BlockChainId entityId,String blockChainName) {
+    public BlockChain(BlockChainId entityId, String blockChainName) {
         super(entityId);
         appendChange(new BlockChainCreated(entityId.value(),blockChainName));
     }

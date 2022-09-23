@@ -3,7 +3,7 @@ package com.sofka.albertus.business.usecases;
 import co.com.sofka.domain.generic.DomainEvent;
 import com.sofka.albertus.business.usecases.gateways.DomainEventRepository;
 import com.sofka.albertus.business.usecases.gateways.EventBus;
-import com.sofka.albertus.domain.commands.CreateBlockChain;
+import com.sofka.albertus.business.usecases.gateways.commands.CreateBlockChain;
 import com.sofka.albertus.domain.events.BlockChainCreated;
 import com.sofka.albertus.domain.events.GenesisBlockCreated;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +14,10 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreateBlockChainUseCaseTest {
