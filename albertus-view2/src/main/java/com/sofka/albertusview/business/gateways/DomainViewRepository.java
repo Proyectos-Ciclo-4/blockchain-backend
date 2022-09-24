@@ -5,6 +5,7 @@ import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
 import com.sofka.albertusview.domain.values.Block;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface DomainViewRepository {
@@ -16,5 +17,7 @@ public interface DomainViewRepository {
     Mono<BlockViewModel> addBlock(BlockViewModel block);
 
     Mono<BlockViewModel> getBlockByHash(String hash);
+
+    Flux<BlockViewModel> getAllBlocksByApplicationId(String applicationId);
 
 }
