@@ -23,8 +23,6 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class CreateBlockUseCaseTest {
 
@@ -41,7 +39,7 @@ class CreateBlockUseCaseTest {
     @DisplayName("createBlockUseCaseTest. Should save both events and publish to Rabbit")
     void createBlockUseCaseTest(){
         //arrange
-        CreateBlock createBlockCommand = new CreateBlock("098098098","aplicatioID","rabit");
+        CreateBlock createBlockCommand = new CreateBlock("aplicatioID","rabit");
 
         String hash = "ajdkjandaksjdnakj";
         Instant timeStamp = Instant.now();
@@ -61,7 +59,7 @@ class CreateBlockUseCaseTest {
 
         ApplicationRegistered applicationRegistered = new ApplicationRegistered(
                 "aplicacionTest",
-                "descripcion de aplicacion");
+                "descripcion de aplicacion", true, "U123");
 
         GenesisBlockCreated genesisBlockCreatedEvent = new GenesisBlockCreated(
                 "Genesis Block"

@@ -11,7 +11,7 @@ public class Block implements ValueObject<Block.Props> {
 
     private final String previousHash;
 
-    private final String data;
+    private final Object data;
 
     private final Instant TimeStamp;
 
@@ -21,7 +21,7 @@ public class Block implements ValueObject<Block.Props> {
 
     private final String applicationID;
 
-    public Block(String hash, String previousHash, String data, Instant timeStamp, Integer nonce, Boolean hasOverCharge, String applicationID) {
+    public Block(String hash, String previousHash, Object data, Instant timeStamp, Integer nonce, Boolean hasOverCharge, String applicationID) {
         this.hash = hash;
         this.previousHash = previousHash;
         this.data = data;
@@ -46,7 +46,7 @@ public class Block implements ValueObject<Block.Props> {
             }
 
             @Override
-            public String data() {
+            public Object data() {
                 return data;
             }
 
@@ -77,7 +77,7 @@ public class Block implements ValueObject<Block.Props> {
 
         String previousHash();
 
-        String data();
+        Object data();
 
         Instant TimeStamp();
 

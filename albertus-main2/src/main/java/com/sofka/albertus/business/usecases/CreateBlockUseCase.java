@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class CreateBlockUseCase {
         return createBlockCommand.flatMapMany(command -> repository.findById(command.getBlockChainID())
                 .collectList()
                 .flatMapIterable(eventsFromRepository -> {
-                    BlockChain blockChain = BlockChain.from(BlockChainId.of(command.getBlockChainID()),eventsFromRepository);
+                    BlockChain blockChain = BlockChain.from(BlockChainId.of("1"),eventsFromRepository);
                     var confirmation = blockChain.getApplications().stream().filter(application ->
                             application.identity().value().equals(command.getApplicationID())
                     ).collect(Collectors.toList());
@@ -56,14 +57,15 @@ public class CreateBlockUseCase {
 
                         String previousHash = blockChain.getBlocks().get(blockChain.getBlocks().size()-1).value().hash();
                         String nonce = String.valueOf((int) (Math.random() * 10000));
-                        String data = command.getData();
+                        Map<String, Object> data = command.getData();
+
                         Instant instant = Instant.now();
                         String timeStamp = String.valueOf(instant);
 
                         Boolean hasOverCharge = overCharge.size() == 5 ? true :  false;
 
                         String hasOverChargeString = hasOverCharge.toString();
-                        String dataToHash = timeStamp + nonce + data + previousHash + hasOverChargeString;
+                        String dataToHash = timeStamp + nonce + data.toString() + previousHash + hasOverChargeString;
                         MessageDigest digest = null;
                         byte[] bytes = null;
                         try {
