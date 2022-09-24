@@ -47,7 +47,7 @@ public class CreateBlockUseCase {
                             application.identity().value().equals(command.getApplicationID())
                     ).collect(Collectors.toList());
 
-                    if (confirmation.size() > 0){
+                    //if (confirmation.size() > 0){
 
                         var overCharge = blockChain.getBlocks().stream().filter(block ->
                                 block.value().TimeStamp().atZone(ZoneId.systemDefault()).getDayOfYear() == LocalDateTime.now().getDayOfMonth()
@@ -85,7 +85,7 @@ public class CreateBlockUseCase {
                                 Integer.valueOf(nonce),
                                 hasOverCharge,
                                 previousHash );
-                    }
+                    //}
                     return blockChain.getUncommittedChanges();
                 }).flatMap(event -> repository.saveEvent(event).thenReturn(event)).doOnNext(bus::publish)
                 .doOnError(error -> log.error(String.valueOf(error))));

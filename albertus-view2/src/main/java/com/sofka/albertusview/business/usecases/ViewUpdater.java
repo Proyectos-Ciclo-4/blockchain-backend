@@ -38,7 +38,17 @@ public class ViewUpdater extends DomainUpdater {
             repository.saveNewBlockChain(blockChainModel).subscribe();
         });
 
-
+        listen((BlockCreated blockCreated) -> {
+            BlockViewModel blockViewModel = new BlockViewModel(
+                    blockCreated.getHash(),
+                    blockCreated.getTimeStamp(),
+                    blockCreated.getNonce(),
+                    blockCreated.getHasOverCharge(),
+                    blockCreated.getPreviusHash()
+            );
+           //bus.publishBlockChain();
+           repository.addBlockToBlockChain(blockViewModel).subscribe();
+        });
 
 
     }

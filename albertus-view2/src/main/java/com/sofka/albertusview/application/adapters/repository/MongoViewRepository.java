@@ -5,51 +5,60 @@ import com.google.gson.Gson;
 import com.sofka.albertusview.business.gateways.DomainViewRepository;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
-import com.sofka.albertusview.domain.values.Block;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Repository
 public class MongoViewRepository implements DomainViewRepository {
 
-  private final ReactiveMongoTemplate template;
+    private final ReactiveMongoTemplate template;
 
-  private final Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
-  public MongoViewRepository(ReactiveMongoTemplate template) {
-    this.template = template;
-  }
+    public MongoViewRepository(ReactiveMongoTemplate template) {
+        this.template = template;
+    }
 
-  @Override
-  public Mono<BlockChainModel> findByAggregateId(String aggregateId) {
+    @Override
+    public Mono<BlockChainModel> findByAggregateId(String aggregateId) {
 
-    var query = new Query(Criteria.where("blockChainId").is(aggregateId));
-    return template.findOne(query, BlockChainModel.class);
-  }
+        var query = new Query(Criteria.where("blockChainId").is(aggregateId));
+        return template.findOne(query, BlockChainModel.class);
+    }
 
 
-  @Override
-  public Mono<BlockChainModel> saveNewBlockChain(BlockChainModel blockChainModel) {
+    @Override
+    public Mono<BlockChainModel> saveNewBlockChain(BlockChainModel blockChainModel) {
 
-    return template.save(blockChainModel);
-  }
+        return template.save(blockChainModel);
+    }
 
-  @Override
-  public Mono<BlockChainModel> addBlockToBlockChain(BlockViewModel block) {
+    @Override
+    public Mono<BlockChainModel> addBlockToBlockChain(BlockViewModel block) {
+    var update = new Update();
+    update.addToSet("blocks").value(block);
+    var query =  Query.query(
+            Criteria.where("blockChainId").is("1")
+    );
+    return template.updateFirst(query,update,"blockChainModel").flatMap(block2 ->{
+        return Mono.empty();
+    });
 
-    return this.findByAggregateId("1")
-        .flatMap( blockChainModel -> {
-          blockChainModel.getBlocks().add(block);
-          return template.save(blockChainModel);
-        });
 
-  }
+       /* var algo = this.findByAggregateId("1")
+                .flatMap(blockChainModel -> {
+                    blockChainModel.getBlocks().add(block);
+
+                    return template.save(blockChainModel);
+                });
+        return algo;*/
+    }
 
 
 }
