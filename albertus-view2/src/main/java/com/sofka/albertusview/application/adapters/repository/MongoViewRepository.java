@@ -60,5 +60,10 @@ public class MongoViewRepository implements DomainViewRepository {
         return algo;*/
     }
 
+    @Override
+    public Mono<BlockViewModel> addBlock(BlockViewModel block) {
+        return template.save(block);
+    }
+
 
 }

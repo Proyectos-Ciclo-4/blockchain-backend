@@ -15,6 +15,7 @@ import com.sofka.albertusview.domain.values.Name;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,12 +45,12 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         return blockChain;
     }
 
-    public void CreateGenesisBlock( String data){
+    public void CreateGenesisBlock( Map<String, Object> data){
         Objects.requireNonNull(data);
         appendChange(new GenesisBlockCreated(data)).apply();
     }
 
-    public void CreateBlock(String data, String applicationId, String hash, Instant timeStamp, Integer nonce, Boolean hasOverCharge,  String previousHash){
+    public void CreateBlock(Map<String, Object> data, String applicationId, String hash, Instant timeStamp, Integer nonce, Boolean hasOverCharge, String previousHash){
         Objects.requireNonNull(data);
         Objects.requireNonNull(applicationId);
         appendChange(new BlockCreated(applicationId, data, hash, timeStamp, nonce, hasOverCharge, previousHash)).apply();

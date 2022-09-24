@@ -3,6 +3,7 @@ package com.sofka.albertusview.domain.values;
 import co.com.sofka.domain.generic.ValueObject;
 
 import java.time.Instant;
+import java.util.Map;
 
 public class Block implements ValueObject<Block.Props> {
 
@@ -10,7 +11,7 @@ public class Block implements ValueObject<Block.Props> {
 
     private final String previousHash;
 
-    private final String data;
+    private final Map<String, Object> data;
 
     private final Instant TimeStamp;
 
@@ -20,7 +21,7 @@ public class Block implements ValueObject<Block.Props> {
 
     private final String applicationID;
 
-    public Block(String hash, String previousHash, String data, Instant timeStamp, Integer nonce, Boolean hasOverCharge, String applicationID) {
+    public Block(String hash, String previousHash, Map<String, Object> data, Instant timeStamp, Integer nonce, Boolean hasOverCharge, String applicationID) {
         this.hash = hash;
         this.previousHash = previousHash;
         this.data = data;
@@ -45,7 +46,7 @@ public class Block implements ValueObject<Block.Props> {
             }
 
             @Override
-            public String data() {
+            public Map<String, Object> data() {
                 return data;
             }
 
@@ -76,7 +77,7 @@ public class Block implements ValueObject<Block.Props> {
 
         String previousHash();
 
-        String data();
+        Map<String, Object> data();
 
         Instant TimeStamp();
 

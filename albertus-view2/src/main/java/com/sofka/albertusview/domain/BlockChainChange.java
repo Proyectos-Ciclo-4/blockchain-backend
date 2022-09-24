@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static io.netty.util.CharsetUtil.UTF_8;
@@ -33,10 +34,11 @@ public class BlockChainChange extends EventChange {
         apply((GenesisBlockCreated event) -> {
             //TODO: implementar logica de creadocion del bloque
             String nonce = String.valueOf((int) (Math.random() * 10000));
-            String data = event.getData();
+            Map<String, Object> data = event.getData();
+
             Instant instant = Instant.now();
             String timeStamp = String.valueOf(instant);
-            String dataToHash = timeStamp + nonce + data;
+            String dataToHash = timeStamp + nonce + data.toString();
             MessageDigest digest = null;
             byte[] bytes = null;
             try {

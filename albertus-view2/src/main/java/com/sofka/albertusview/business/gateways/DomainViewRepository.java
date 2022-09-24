@@ -13,4 +13,6 @@ public interface DomainViewRepository {
 
     Mono<BlockChainModel> addBlockToBlockChain(BlockViewModel block);
 
+    Mono<BlockViewModel> addBlock(BlockViewModel block);
+
 }

@@ -1,6 +1,7 @@
 package com.sofka.albertusview.business.usecases;
 
 
+
 import com.sofka.albertusview.business.gateways.DomainViewRepository;
 import com.sofka.albertusview.business.gateways.EventBus;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
@@ -11,6 +12,8 @@ import com.sofka.albertusview.domain.events.BlockCreated;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -34,12 +37,14 @@ public class ViewUpdater extends DomainUpdater {
                     new ArrayList<>()
 
             );
-            bus.publishBlockChain(blockChainModel);
+            //bus.publishBlockChain(blockChainModel);
             repository.saveNewBlockChain(blockChainModel).subscribe();
         });
 
         listen((BlockCreated blockCreated) -> {
             BlockViewModel blockViewModel = new BlockViewModel(
+                    blockCreated.getApplicationID(),
+                    blockCreated.getData(),
                     blockCreated.getHash(),
                     blockCreated.getTimeStamp(),
                     blockCreated.getNonce(),
@@ -47,7 +52,7 @@ public class ViewUpdater extends DomainUpdater {
                     blockCreated.getPreviusHash()
             );
            //bus.publishBlockChain();
-           repository.addBlockToBlockChain(blockViewModel).subscribe();
+           repository.addBlock(blockViewModel).subscribe();
         });
 
 

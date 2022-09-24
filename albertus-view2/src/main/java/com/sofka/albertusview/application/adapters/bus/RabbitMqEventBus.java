@@ -34,6 +34,5 @@ public class RabbitMqEventBus implements EventBus {
         RabbitMqConfig.EXCHANGE, RabbitMqConfig.PROXY_ROUTING_KEY_AGG_BLOCKCHAIN,
         gson.toJson(blockChainViewModel).getBytes()
     );
-
   }
 }
