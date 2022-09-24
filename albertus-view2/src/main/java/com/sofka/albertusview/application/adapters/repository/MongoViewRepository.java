@@ -65,5 +65,13 @@ public class MongoViewRepository implements DomainViewRepository {
         return template.save(block);
     }
 
+    @Override
+    public Mono<BlockViewModel> getBlockByHash(String hash) {
+        var query =  Query.query(
+                Criteria.where("hash").is(hash)
+        );
+        return template.findOne(query,BlockViewModel.class);
+    }
+
 
 }

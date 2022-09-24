@@ -15,4 +15,6 @@ public interface DomainViewRepository {
 
     Mono<BlockViewModel> addBlock(BlockViewModel block);
 
+    Mono<BlockViewModel> getBlockByHash(String hash);
+
 }
