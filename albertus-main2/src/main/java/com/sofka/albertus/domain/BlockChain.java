@@ -2,21 +2,21 @@ package com.sofka.albertus.domain;
 
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
+import com.sofka.albertus.domain.events.ApplicationUpdated;
 import com.sofka.albertus.domain.events.BlockChainCreated;
 import com.sofka.albertus.domain.entity.Application;
 import com.sofka.albertus.domain.entity.Invoice;
 import com.sofka.albertus.domain.entity.User;
 import com.sofka.albertus.domain.events.BlockCreated;
 import com.sofka.albertus.domain.events.GenesisBlockCreated;
+import com.sofka.albertus.domain.values.ApplicationId;
 import com.sofka.albertus.domain.values.Block;
 import com.sofka.albertus.domain.values.BlockChainId;
 import com.sofka.albertus.domain.values.Name;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BlockChain  extends AggregateEvent<BlockChainId> {
 
@@ -58,7 +58,21 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         appendChange(new BlockCreated(applicationId, data, hash, timeStamp, nonce, hasOverCharge, previousHash)).apply();
     }
 
+
+    public void updateApplication(String applicationID, String nameApplication, String description){
+        Objects.requireNonNull(applicationID);
+        Objects.requireNonNull(nameApplication);
+        Objects.requireNonNull(description);
+        appendChange(new ApplicationUpdated(applicationID, nameApplication, description)).apply();
+    }
+
+
     public List<Block> getBlocks() {
         return blocks;
     }
+
+    public Optional<Application> getApplicationByID(ApplicationId applicationId){
+        return applications.stream().filter((application -> application.identity().equals(applicationId))).findFirst();
+    }
+
 }

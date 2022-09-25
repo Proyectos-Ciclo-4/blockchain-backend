@@ -7,8 +7,10 @@ import com.sofka.albertus.application.helpers.AuthorizationProvider;
 import com.sofka.albertus.application.helpers.CreateBlockDeserialize;
 import com.sofka.albertus.business.usecases.CreateBlockChainUseCase;
 import com.sofka.albertus.business.usecases.CreateBlockUseCase;
+import com.sofka.albertus.business.usecases.UpdateApplicationUseCase;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlockChain;
+import com.sofka.albertus.business.usecases.gateways.commands.UpdateApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -20,8 +22,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -54,6 +55,16 @@ public class CommandHandle {
                             DomainEvent.class))
     );
   }
+
+
+  public RouterFunction<ServerResponse> updateApplication(UpdateApplicationUseCase useCase){
+    return route(
+      PUT("/update/application").and(accept(MediaType.APPLICATION_JSON)),
+            request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromPublisher(useCase.apply(request.bodyToMono(UpdateApplication.class)), DomainEvent.class))
+    );
+  }
+
 
 }
 

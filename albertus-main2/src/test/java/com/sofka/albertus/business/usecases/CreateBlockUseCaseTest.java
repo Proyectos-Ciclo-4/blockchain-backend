@@ -26,7 +26,7 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class CreateBlockUseCaseTest {
 
-    @Mock
+   /* @Mock
     private EventBus eventBusMock;
 
     @Mock
@@ -97,7 +97,7 @@ class CreateBlockUseCaseTest {
         BDDMockito.verify(this.repositoryMock, BDDMockito.times(1))
                 .findById(ArgumentMatchers.anyString());
     }
-
+*/
 
 
 }

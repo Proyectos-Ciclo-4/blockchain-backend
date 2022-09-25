@@ -53,4 +53,10 @@ public class Application extends Entity<ApplicationId> {
     public void setUserId(UserId userId) {
         this.userId = userId;
     }
+
+    public void updateApplication(String nameApplication, String descriptionApplication){
+        this.nameApplication = new Name(nameApplication);
+        this.description = new Description(descriptionApplication);
+    }
+
 }

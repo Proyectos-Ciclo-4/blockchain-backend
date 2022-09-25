@@ -1,9 +1,11 @@
 package com.sofka.albertus.domain;
 
 import co.com.sofka.domain.generic.EventChange;
+import com.sofka.albertus.domain.events.ApplicationUpdated;
 import com.sofka.albertus.domain.events.BlockChainCreated;
 import com.sofka.albertus.domain.events.BlockCreated;
 import com.sofka.albertus.domain.events.GenesisBlockCreated;
+import com.sofka.albertus.domain.values.ApplicationId;
 import com.sofka.albertus.domain.values.Block;
 import com.sofka.albertus.domain.values.Name;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +68,12 @@ public class BlockChainChange extends EventChange {
                     event.getApplicationID())
             );
         });
+
+        apply((ApplicationUpdated event) -> {
+            var application = blockChain.getApplicationByID(ApplicationId.of(event.getApplicationID())).orElseThrow(() -> new IllegalArgumentException("Invalid ID to retrive Application"));
+            application.updateApplication(event.getNameApplication(), event.getDescription());
+        });
+
+
     }
 }
