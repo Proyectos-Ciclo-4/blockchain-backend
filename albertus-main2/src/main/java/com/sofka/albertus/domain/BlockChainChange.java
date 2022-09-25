@@ -1,13 +1,9 @@
 package com.sofka.albertus.domain;
 
 import co.com.sofka.domain.generic.EventChange;
-import com.sofka.albertus.domain.events.ApplicationUpdated;
-import com.sofka.albertus.domain.events.BlockChainCreated;
-import com.sofka.albertus.domain.events.BlockCreated;
-import com.sofka.albertus.domain.events.GenesisBlockCreated;
-import com.sofka.albertus.domain.values.ApplicationId;
-import com.sofka.albertus.domain.values.Block;
-import com.sofka.albertus.domain.values.Name;
+import com.sofka.albertus.domain.entity.Application;
+import com.sofka.albertus.domain.events.*;
+import com.sofka.albertus.domain.values.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Marker;
 
@@ -74,6 +70,15 @@ public class BlockChainChange extends EventChange {
             application.updateApplication(event.getNameApplication(), event.getDescription());
         });
 
+        apply((ApplicationRegistered event) -> {
+            blockChain.applications.add(new Application(
+                    (ApplicationId.of(event.getApplicationId())),
+                    new Name(event.getNameApplication()),
+                    new Description(event.getDescription()),
+                    new IsActive(event.getActive()),
+                    new UserId(event.getUserId())
+            ));
+        });
 
     }
 }

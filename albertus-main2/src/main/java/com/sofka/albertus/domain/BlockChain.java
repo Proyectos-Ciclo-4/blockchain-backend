@@ -2,13 +2,10 @@ package com.sofka.albertus.domain;
 
 import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
-import com.sofka.albertus.domain.events.ApplicationUpdated;
-import com.sofka.albertus.domain.events.BlockChainCreated;
+import com.sofka.albertus.domain.events.*;
 import com.sofka.albertus.domain.entity.Application;
 import com.sofka.albertus.domain.entity.Invoice;
 import com.sofka.albertus.domain.entity.User;
-import com.sofka.albertus.domain.events.BlockCreated;
-import com.sofka.albertus.domain.events.GenesisBlockCreated;
 import com.sofka.albertus.domain.values.ApplicationId;
 import com.sofka.albertus.domain.values.Block;
 import com.sofka.albertus.domain.values.BlockChainId;
@@ -64,6 +61,15 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         Objects.requireNonNull(nameApplication);
         Objects.requireNonNull(description);
         appendChange(new ApplicationUpdated(applicationID, nameApplication, description)).apply();
+    }
+
+    public void registerApplication(String applicationId,String name, String description, Boolean isActive, String userId ){
+        Objects.requireNonNull(applicationId);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(description);
+        //Objects.requireNonNull(isActive);
+        Objects.requireNonNull(userId);
+        appendChange(new ApplicationRegistered(applicationId,name,description, isActive, userId)).apply();
     }
 
 

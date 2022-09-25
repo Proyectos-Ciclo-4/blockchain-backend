@@ -4,6 +4,7 @@ import co.com.sofka.domain.generic.DomainEvent;
 
 public class ApplicationRegistered extends DomainEvent {
 
+    private String applicationId;
     private String nameApplication;
 
     private String description;
@@ -12,12 +13,18 @@ public class ApplicationRegistered extends DomainEvent {
 
     private String userId;
 
-    public ApplicationRegistered(String nameApplication, String description, Boolean isActive, String userId) {
+
+    public ApplicationRegistered(String applicationId, String nameApplication, String description, Boolean isActive, String userId) {
         super("sofka.albertus.domain.ApplicationRegistered");
+        this.applicationId = applicationId;
         this.nameApplication = nameApplication;
         this.description = description;
         this.isActive = isActive;
         this.userId = userId;
+    }
+
+    public String getApplicationId() {
+        return applicationId;
     }
 
     public Boolean getActive() {
