@@ -67,7 +67,6 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         Objects.requireNonNull(applicationId);
         Objects.requireNonNull(name);
         Objects.requireNonNull(description);
-        //Objects.requireNonNull(isActive);
         Objects.requireNonNull(userId);
         appendChange(new ApplicationRegistered(applicationId,name,description, isActive, userId)).apply();
     }
@@ -79,6 +78,10 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
 
     public Optional<Application> getApplicationByID(ApplicationId applicationId){
         return applications.stream().filter((application -> application.identity().equals(applicationId))).findFirst();
+    }
+
+    public void deleteApplication(String applicationId){
+        appendChange(new ApplicationDeleted(applicationId)).apply();
     }
 
 }

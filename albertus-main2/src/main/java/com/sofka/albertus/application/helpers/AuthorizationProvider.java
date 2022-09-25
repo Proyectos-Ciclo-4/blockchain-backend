@@ -30,9 +30,3 @@ public class AuthorizationProvider {
 
   }
 }
-//    command.flatMap((commandHeader, ) ->{
-//          commandHeader.setApplicationID(header);
-//
-//          return commandHeader;
-//        }
-//    );

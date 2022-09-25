@@ -59,4 +59,8 @@ public class Application extends Entity<ApplicationId> {
         this.description = new Description(descriptionApplication);
     }
 
+    public  void deleteApplication(){
+        this.isActive = new IsActive(false);
+    }
+
 }

@@ -80,5 +80,12 @@ public class BlockChainChange extends EventChange {
             ));
         });
 
+        apply((ApplicationDeleted event)->{
+           var deleteApplication = blockChain.getApplicationByID(ApplicationId.of(
+               event.getApplicationID())).orElseThrow(() -> new IllegalArgumentException("Invalid ID to retrive Application"));
+           deleteApplication.deleteApplication();
+
+        });
+
     }
 }

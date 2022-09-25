@@ -7,10 +7,12 @@ import com.sofka.albertus.application.helpers.AuthorizationProvider;
 import com.sofka.albertus.application.helpers.CreateBlockDeserialize;
 import com.sofka.albertus.business.usecases.CreateBlockChainUseCase;
 import com.sofka.albertus.business.usecases.CreateBlockUseCase;
+import com.sofka.albertus.business.usecases.DeleteApplicationUseCase;
 import com.sofka.albertus.business.usecases.RegisterApplicationUseCase;
 import com.sofka.albertus.business.usecases.UpdateApplicationUseCase;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlockChain;
+import com.sofka.albertus.business.usecases.gateways.commands.DeleteApplication;
 import com.sofka.albertus.business.usecases.gateways.commands.RegisterApplication;
 import com.sofka.albertus.business.usecases.gateways.commands.UpdateApplication;
 import org.springframework.context.annotation.Bean;
@@ -66,6 +68,16 @@ public class CommandHandle {
                     .body(BodyInserters.fromPublisher(useCase.apply(request.bodyToMono(UpdateApplication.class)), DomainEvent.class))
     );
   }
+
+  @Bean
+  public RouterFunction<ServerResponse> deleteApplication(DeleteApplicationUseCase useCase){
+    return route(
+        PUT("/delete").and(accept(MediaType.APPLICATION_JSON)),
+        request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromPublisher(useCase.apply(request.bodyToMono(DeleteApplication.class)), DomainEvent.class))
+    );
+  }
+
 
   @Bean
   public RouterFunction<ServerResponse> registerApplication(RegisterApplicationUseCase useCase) {
