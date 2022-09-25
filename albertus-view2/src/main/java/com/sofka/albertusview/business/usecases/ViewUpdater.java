@@ -1,19 +1,19 @@
 package com.sofka.albertusview.business.usecases;
 
 
-
 import com.sofka.albertusview.business.gateways.DomainViewRepository;
 import com.sofka.albertusview.business.gateways.EventBus;
+import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
 import com.sofka.albertusview.business.generics.DomainUpdater;
+import com.sofka.albertusview.domain.events.ApplicationDeleted;
+import com.sofka.albertusview.domain.events.ApplicationRegistered;
 import com.sofka.albertusview.domain.events.BlockChainCreated;
 import com.sofka.albertusview.domain.events.BlockCreated;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Service
@@ -24,7 +24,8 @@ public class ViewUpdater extends DomainUpdater {
 
     private final EventBus bus;
 
-    public ViewUpdater(DomainViewRepository repository, EventBus bus){
+    public ViewUpdater(DomainViewRepository repository,
+                       EventBus bus) {
         this.repository = repository;
         this.bus = bus;
 
@@ -51,8 +52,26 @@ public class ViewUpdater extends DomainUpdater {
                     blockCreated.getHasOverCharge(),
                     blockCreated.getPreviusHash()
             );
-           //bus.publishBlockChain();
-           repository.addBlock(blockViewModel).subscribe();
+            //bus.publishBlockChain();
+            repository.addBlock(blockViewModel).subscribe();
+        });
+
+        listen((ApplicationRegistered applicationRegistered) -> {
+            ApplicationViewModel applicationViewModel = new ApplicationViewModel(
+                    applicationRegistered.getNameApplication(),
+                    applicationRegistered.getDescription(),
+                    applicationRegistered.getActive(),
+                    applicationRegistered.getUserId()
+            );
+            repository.saveNewApplication(applicationViewModel).subscribe();
+        });
+
+        listen((ApplicationDeleted applicationDeleted) -> {
+            ApplicationViewModel applicationViewModel = new ApplicationViewModel(
+                applicationDeleted.getApplicationID(),
+                    false
+            );
+            repository.updateDeleteApplication(applicationViewModel).subscribe();
         });
 
 

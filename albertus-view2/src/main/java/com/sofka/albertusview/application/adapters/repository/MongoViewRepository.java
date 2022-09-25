@@ -3,6 +3,7 @@ package com.sofka.albertusview.application.adapters.repository;
 
 import com.google.gson.Gson;
 import com.sofka.albertusview.business.gateways.DomainViewRepository;
+import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
 import lombok.extern.slf4j.Slf4j;
@@ -81,4 +82,16 @@ public class MongoViewRepository implements DomainViewRepository {
         );
         return template.find(query,BlockViewModel.class);
     }
+
+    @Override
+    public Mono<ApplicationViewModel> saveNewApplication(ApplicationViewModel application) {
+        return template.save(application);
+    }
+
+    @Override
+    public Mono<ApplicationViewModel> updateDeleteApplication(ApplicationViewModel application) {
+        return template.save(application);
+    }
+
+
 }

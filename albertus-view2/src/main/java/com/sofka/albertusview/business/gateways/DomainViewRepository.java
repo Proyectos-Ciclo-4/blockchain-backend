@@ -1,6 +1,7 @@
 package com.sofka.albertusview.business.gateways;
 
 
+import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
@@ -19,5 +20,10 @@ public interface DomainViewRepository {
     Mono<BlockViewModel> getBlockByHash(String hash);
 
     Flux<BlockViewModel> getAllBlocksByApplicationId(String applicationId);
+
+    Mono<ApplicationViewModel> saveNewApplication(ApplicationViewModel application);
+
+    Mono<ApplicationViewModel> updateDeleteApplication(ApplicationViewModel application);
+
 
 }
