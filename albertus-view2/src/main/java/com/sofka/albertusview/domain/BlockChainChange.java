@@ -1,9 +1,11 @@
-package com.sofka.albertus.domain;
+package com.sofka.albertusview.domain;
 
 import co.com.sofka.domain.generic.EventChange;
-import com.sofka.albertus.domain.entity.Application;
-import com.sofka.albertus.domain.events.*;
-import com.sofka.albertus.domain.values.*;
+import com.sofka.albertusview.domain.events.BlockChainCreated;
+import com.sofka.albertusview.domain.events.BlockCreated;
+import com.sofka.albertusview.domain.events.GenesisBlockCreated;
+import com.sofka.albertusview.domain.values.Block;
+import com.sofka.albertusview.domain.values.Name;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Marker;
 
@@ -12,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static io.netty.util.CharsetUtil.UTF_8;
@@ -22,19 +25,20 @@ public class BlockChainChange extends EventChange {
 
         apply((BlockChainCreated event) -> {
             blockChain.users = new HashSet<>();
-            blockChain.blocks = event.getBlocks();
-            blockChain.applications = event.getApplications();
-            blockChain.invoices = event.getInvoices();
+            blockChain.blocks = new ArrayList<>();
+            blockChain.applications = new ArrayList<>();
+            blockChain.invoices = new ArrayList<>();
             blockChain.blockChainName = new Name(event.getBlockChainName());
         });
 
         apply((GenesisBlockCreated event) -> {
             //TODO: implementar logica de creadocion del bloque
             String nonce = String.valueOf((int) (Math.random() * 10000));
-            String data = event.getData();
+            Map<String, Object> data = event.getData();
+
             Instant instant = Instant.now();
             String timeStamp = String.valueOf(instant);
-            String dataToHash = timeStamp + nonce + data;
+            String dataToHash = timeStamp + nonce + data.toString();
             MessageDigest digest = null;
             byte[] bytes = null;
             try {
@@ -64,30 +68,5 @@ public class BlockChainChange extends EventChange {
                     event.getApplicationID())
             );
         });
-
-        apply((ApplicationUpdated event) -> {
-            var application = blockChain.getApplicationByID(ApplicationId.of(event.getApplicationID())).orElseThrow(() -> new IllegalArgumentException("Invalid ID to retrive Application"));
-            application.updateApplication(event.getNameApplication(), event.getDescription());
-        });
-
-        apply((ApplicationRegistered event) -> {
-            blockChain.applications.add(new Application(
-                    (ApplicationId.of(event.getApplicationId())),
-                    new Name(event.getNameApplication()),
-                    new Description(event.getDescription()),
-                    new IsActive(event.getActive()),
-                    new UserId(event.getUserId()),
-                    new CreationDate(event.getCreationDate()),
-                    new ModificationDate(event.getModificationDate())
-            ));
-        });
-
-        apply((ApplicationDeleted event)->{
-           var deleteApplication = blockChain.getApplicationByID(ApplicationId.of(
-               event.getApplicationID())).orElseThrow(() -> new IllegalArgumentException("Invalid ID to retrive Application"));
-           deleteApplication.deleteApplication();
-
-        });
-
     }
 }

@@ -1,4 +1,4 @@
-package com.sofka.albertus.domain.events;
+package com.sofka.albertusview.domain.events;
 
 import co.com.sofka.domain.generic.DomainEvent;
 
@@ -20,13 +20,7 @@ public class ApplicationRegistered extends DomainEvent {
     private Instant modificationDate;
 
 
-    public ApplicationRegistered(String applicationId,
-                                 String nameApplication,
-                                 String description,
-                                 Boolean isActive,
-                                 String userId,
-                                 Instant creationDate,
-                                 Instant modificationDate) {
+    public ApplicationRegistered(String applicationId, String nameApplication, String description, Boolean isActive, String userId, Instant creationDate, Instant modificationDate) {
         super("sofka.albertus.domain.ApplicationRegistered");
         this.applicationId = applicationId;
         this.nameApplication = nameApplication;
@@ -45,14 +39,6 @@ public class ApplicationRegistered extends DomainEvent {
         return isActive;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public Instant getModificationDate() {
-        return modificationDate;
-    }
-
     public String getUserId() {
         return userId;
     }
@@ -63,5 +49,13 @@ public class ApplicationRegistered extends DomainEvent {
 
     public String getDescription() {
         return description;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public Instant getModificationDate() {
+        return modificationDate;
     }
 }

@@ -26,4 +26,5 @@ public interface DomainViewRepository {
     Mono<UpdateResult> updateDeleteApplication(String idApplication);
 
 
+    Mono<UpdateResult> updateApplication(String idApplication, String description, String name);
 }

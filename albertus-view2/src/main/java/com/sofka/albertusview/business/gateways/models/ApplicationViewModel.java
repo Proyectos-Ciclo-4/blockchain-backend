@@ -1,5 +1,10 @@
 package com.sofka.albertusview.business.gateways.models;
 
+import com.sofka.albertusview.domain.values.CreationDate;
+import com.sofka.albertusview.domain.values.ModificationDate;
+
+import java.time.Instant;
+
 public class ApplicationViewModel {
 
   private String applicationID;
@@ -8,12 +13,18 @@ public class ApplicationViewModel {
   private Boolean isActive;
   private String userId;
 
-  public ApplicationViewModel(String applicationID, String nameApplication, String description, Boolean isActive, String userId) {
+  private Instant creationDate;
+
+  private Instant modificationDate;
+
+  public ApplicationViewModel(String applicationID, String nameApplication, String description, Boolean isActive, String userId,Instant creationDate,Instant modificationDate) {
     this.applicationID = applicationID;
     this.nameApplication = nameApplication;
     this.description = description;
     this.isActive = isActive;
     this.userId = userId;
+    this.creationDate = creationDate;
+    this.modificationDate = modificationDate;
   }
 
   public String getNameApplication() {
@@ -50,5 +61,21 @@ public class ApplicationViewModel {
 
   public void setUserId(String userId) {
     this.userId = userId;
+  }
+
+  public Instant getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(Instant creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public Instant getModificationDate() {
+    return modificationDate;
+  }
+
+  public void setModificationDate(Instant modificationDate) {
+    this.modificationDate = modificationDate;
   }
 }

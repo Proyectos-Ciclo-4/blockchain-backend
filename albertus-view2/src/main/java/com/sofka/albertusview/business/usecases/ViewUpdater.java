@@ -7,10 +7,7 @@ import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
 import com.sofka.albertusview.business.generics.DomainUpdater;
-import com.sofka.albertusview.domain.events.ApplicationDeleted;
-import com.sofka.albertusview.domain.events.ApplicationRegistered;
-import com.sofka.albertusview.domain.events.BlockChainCreated;
-import com.sofka.albertusview.domain.events.BlockCreated;
+import com.sofka.albertusview.domain.events.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,7 +59,9 @@ public class ViewUpdater extends DomainUpdater {
                     applicationRegistered.getNameApplication(),
                     applicationRegistered.getDescription(),
                     applicationRegistered.getActive(),
-                    applicationRegistered.getUserId()
+                    applicationRegistered.getUserId(),
+                    applicationRegistered.getCreationDate(),
+                    applicationRegistered.getModificationDate()
             );
             repository.saveNewApplication(applicationViewModel).subscribe();
         });
@@ -70,6 +69,12 @@ public class ViewUpdater extends DomainUpdater {
         listen((ApplicationDeleted applicationDeleted) -> {
             repository.updateDeleteApplication(applicationDeleted.getApplicationID()).subscribe();
         });
+
+        listen((ApplicationUpdated applicationUpdated) -> {
+            repository.updateApplication(applicationUpdated.getApplicationID(), applicationUpdated.getDescription(), applicationUpdated.getNameApplication()).subscribe();
+        });
+
+
 
 
 

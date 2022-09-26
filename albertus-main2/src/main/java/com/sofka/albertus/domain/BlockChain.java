@@ -63,12 +63,16 @@ public class BlockChain  extends AggregateEvent<BlockChainId> {
         appendChange(new ApplicationUpdated(applicationID, nameApplication, description)).apply();
     }
 
-    public void registerApplication(String applicationId,String name, String description, Boolean isActive, String userId ){
+    public void registerApplication(String applicationId, String name, String description, Boolean isActive,
+                                    String userId,
+                                    Instant creationDate,
+                                    Instant modificationDate ){
         Objects.requireNonNull(applicationId);
         Objects.requireNonNull(name);
         Objects.requireNonNull(description);
         Objects.requireNonNull(userId);
-        appendChange(new ApplicationRegistered(applicationId,name,description, isActive, userId)).apply();
+        Objects.requireNonNull(creationDate);
+        appendChange(new ApplicationRegistered(applicationId,name,description, isActive, userId, creationDate, modificationDate)).apply();
     }
 
 

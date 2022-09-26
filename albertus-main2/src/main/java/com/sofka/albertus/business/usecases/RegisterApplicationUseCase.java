@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
 @Slf4j
 @Component
 public class RegisterApplicationUseCase {
@@ -34,7 +36,9 @@ public class RegisterApplicationUseCase {
                             command.getNameApplication(),
                             command.getDescription(),
                             true,
-                            command.getUserId());
+                            command.getUserId(),
+                            Instant.now(),
+                            Instant.now());
                     return blockChain.getUncommittedChanges();
 
                 }).map(event ->{
