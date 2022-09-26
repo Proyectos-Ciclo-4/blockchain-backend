@@ -58,6 +58,7 @@ public class ViewUpdater extends DomainUpdater {
 
         listen((ApplicationRegistered applicationRegistered) -> {
             ApplicationViewModel applicationViewModel = new ApplicationViewModel(
+                    applicationRegistered.getApplicationId(),
                     applicationRegistered.getNameApplication(),
                     applicationRegistered.getDescription(),
                     applicationRegistered.getActive(),
@@ -67,12 +68,9 @@ public class ViewUpdater extends DomainUpdater {
         });
 
         listen((ApplicationDeleted applicationDeleted) -> {
-            ApplicationViewModel applicationViewModel = new ApplicationViewModel(
-                applicationDeleted.getApplicationID(),
-                    false
-            );
-            repository.updateDeleteApplication(applicationViewModel).subscribe();
+            repository.updateDeleteApplication(applicationDeleted.getApplicationID()).subscribe();
         });
+
 
 
     }

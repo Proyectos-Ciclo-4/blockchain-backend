@@ -1,7 +1,5 @@
 package com.sofka.albertusview.business.gateways.models;
 
-import com.sofka.albertusview.domain.values.UserId;
-
 public class ApplicationViewModel {
 
   private String applicationID;
@@ -10,16 +8,12 @@ public class ApplicationViewModel {
   private Boolean isActive;
   private String userId;
 
-  public ApplicationViewModel(String nameApplication, String description, Boolean isActive, String userId) {
+  public ApplicationViewModel(String applicationID, String nameApplication, String description, Boolean isActive, String userId) {
+    this.applicationID = applicationID;
     this.nameApplication = nameApplication;
     this.description = description;
     this.isActive = isActive;
     this.userId = userId;
-  }
-
-  public ApplicationViewModel(String applicationID,Boolean isActive) {
-    this.applicationID = applicationID;
-    this.isActive = isActive;
   }
 
   public String getNameApplication() {

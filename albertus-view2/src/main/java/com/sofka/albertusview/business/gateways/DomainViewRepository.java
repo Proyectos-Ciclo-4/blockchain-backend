@@ -1,11 +1,11 @@
 package com.sofka.albertusview.business.gateways;
 
 
+import com.mongodb.client.result.UpdateResult;
 import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockChainModel;
 
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
-import com.sofka.albertusview.domain.values.Block;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +23,7 @@ public interface DomainViewRepository {
 
     Mono<ApplicationViewModel> saveNewApplication(ApplicationViewModel application);
 
-    Mono<ApplicationViewModel> updateDeleteApplication(ApplicationViewModel application);
+    Mono<UpdateResult> updateDeleteApplication(String idApplication);
 
 
 }

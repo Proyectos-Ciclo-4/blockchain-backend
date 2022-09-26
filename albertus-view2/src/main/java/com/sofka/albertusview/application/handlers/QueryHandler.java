@@ -1,8 +1,10 @@
 package com.sofka.albertusview.application.handlers;
 
 
+import com.sofka.albertusview.business.gateways.models.ApplicationViewModel;
 import com.sofka.albertusview.business.gateways.models.BlockViewModel;
 import com.sofka.albertusview.business.usecases.BlocksByApplicationIdUseCase;
+import com.sofka.albertusview.business.usecases.BringApplicationsUseCase;
 import com.sofka.albertusview.business.usecases.BringBlockByHashUseCase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -39,4 +41,12 @@ public class QueryHandler {
 
   }
 
+  @Bean
+  public RouterFunction<ServerResponse> getAllApplicationsByUserId(BringApplicationsUseCase bringApplicationsUseCase){
+    return route(GET("/applications/{userId}"),
+            request -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromPublisher(bringApplicationsUseCase.apply(request.pathVariable("userId")), ApplicationViewModel.class))
+    );
+
+  }
 }
