@@ -12,7 +12,6 @@ import com.sofka.albertus.domain.values.BlockChainId;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Marker;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.MessageDigest;
@@ -40,9 +39,9 @@ public class CreateBlockUseCase {
         this.bus = bus;
     }
 
-    public Flux<BlockHashResponse> apply(Mono<CreateBlock> createBlockCommand){
+    public Mono<BlockHashResponse> apply(Mono<CreateBlock> createBlockCommand){
 
-        return createBlockCommand.flatMapMany(command -> repository.findById(command.getBlockChainID())
+        return createBlockCommand.flatMap(command -> repository.findById(command.getBlockChainID())
                 .collectList()
                 .map(eventsFromRepository -> {
                     BlockChain blockChain = BlockChain.from(BlockChainId.of("1"),eventsFromRepository);
