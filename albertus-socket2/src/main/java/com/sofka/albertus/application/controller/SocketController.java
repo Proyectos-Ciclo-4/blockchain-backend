@@ -2,6 +2,8 @@ package com.sofka.albertus.application.controller;
 
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,14 +62,25 @@ public class SocketController {
     if (Objects.nonNull(correlationId) && sessions.containsKey(correlationId)) {
       logger.info("sent from " + correlationId);
 
-      sessions.get(correlationId).values()
+      /*sessions.get(correlationId).values()
           .forEach(session -> {
             try {
               session.getAsyncRemote().sendText(message);
             } catch (RuntimeException e){
               logger.log(Level.SEVERE, e.getMessage(), e);
             }
-          });
+          });*/
+
+      sessions.get(correlationId).values()
+              .forEach(session -> {
+                try {
+                  session.getBasicRemote().sendText(message);
+                } catch (RuntimeException e){
+                  logger.log(Level.SEVERE, e.getMessage(), e);
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              });
     }
   }
 

@@ -10,11 +10,12 @@ import org.slf4j.Marker;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.logging.Level;
 
-import static io.netty.util.CharsetUtil.UTF_8;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 public class BlockChainChange extends EventChange {
