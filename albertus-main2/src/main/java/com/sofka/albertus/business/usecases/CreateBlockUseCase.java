@@ -2,10 +2,12 @@ package com.sofka.albertus.business.usecases;
 
 
 import co.com.sofka.domain.generic.DomainEvent;
+import com.sofka.albertus.application.helpers.BlockHashResponse;
 import com.sofka.albertus.business.usecases.gateways.DomainEventRepository;
 import com.sofka.albertus.business.usecases.gateways.EventBus;
 import com.sofka.albertus.domain.BlockChain;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
+import com.sofka.albertus.domain.events.BlockCreated;
 import com.sofka.albertus.domain.values.BlockChainId;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Marker;
@@ -38,11 +40,11 @@ public class CreateBlockUseCase {
         this.bus = bus;
     }
 
-    public Flux<DomainEvent> apply(Mono<CreateBlock> createBlockCommand){
+    public Flux<BlockHashResponse> apply(Mono<CreateBlock> createBlockCommand){
 
         return createBlockCommand.flatMapMany(command -> repository.findById(command.getBlockChainID())
                 .collectList()
-                .flatMapIterable(eventsFromRepository -> {
+                .map(eventsFromRepository -> {
                     BlockChain blockChain = BlockChain.from(BlockChainId.of("1"),eventsFromRepository);
                     var confirmation = blockChain.getApplications().stream().filter(application ->
                             application.identity().value().equals(command.getApplicationID())
@@ -88,8 +90,12 @@ public class CreateBlockUseCase {
                                 hasOverCharge,
                                 previousHash );
                     //}
-                    return blockChain.getUncommittedChanges();
-                }).flatMap(event -> repository.saveEvent(event).thenReturn(event)).doOnNext(bus::publish)
+                    return (BlockCreated)blockChain.getUncommittedChanges().get(0);
+                }).flatMap(event -> repository.saveEvent((DomainEvent) event))
+                .map(event -> {
+                    bus.publish(event);
+                    return BlockHashResponse.from((BlockCreated) event);
+                })
                 .doOnError(error -> log.error(String.valueOf(error))));
     }
 

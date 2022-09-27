@@ -19,7 +19,7 @@ public class AuthorizationProvider {
   public Mono<CreateBlock> getAuthorization(Mono<Object> info, Headers headers) {
 
     var createBlockCommand = new CreateBlock();
-    LinkedHashMap<String, String> mapa;
+
     var header = headers.firstHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
     createBlockCommand.setApplicationID(header);
 
