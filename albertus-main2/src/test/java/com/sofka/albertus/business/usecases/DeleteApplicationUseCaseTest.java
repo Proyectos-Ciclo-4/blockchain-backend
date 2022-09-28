@@ -1,17 +1,10 @@
 package com.sofka.albertus.business.usecases;
 
 import co.com.sofka.domain.generic.DomainEvent;
-import com.sofka.albertus.application.helpers.BlockHashResponse;
 import com.sofka.albertus.business.usecases.gateways.DomainEventRepository;
 import com.sofka.albertus.business.usecases.gateways.EventBus;
-import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
-import com.sofka.albertus.domain.events.ApplicationRegistered;
-import com.sofka.albertus.domain.events.BlockChainCreated;
-import com.sofka.albertus.domain.events.BlockCreated;
-import com.sofka.albertus.domain.events.GenesisBlockCreated;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+import com.sofka.albertus.business.usecases.gateways.commands.DeleteApplication;
+import com.sofka.albertus.domain.events.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +20,10 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
-class CreateBlockUseCaseTest {
+class DeleteApplicationUseCaseTest {
 
     @Mock
     private EventBus eventBusMock;
@@ -37,62 +32,56 @@ class CreateBlockUseCaseTest {
     private DomainEventRepository repositoryMock;
 
     @InjectMocks
-    private CreateBlockUseCase usecase;
+    private DeleteApplicationUseCase usecase;
 
     @Test
-    @DisplayName("createBlockUseCaseTest. Should save both events and publish to Rabbit")
-    void createBlockUseCaseTest(){
-        var data = new HashMap<String,String>();
-        data.put("prueba","hola");
-        data.put("nombre","Lu");
-        //arrange
-        CreateBlock createBlockCommand = new CreateBlock("aplicatioID",data);
+    @DisplayName("DeleteApplicationUseCaseTest.")
+    void DeleteApplicationUseCaseTest() {
 
-        String hash = "ajdkjandaksjdnakj";
-        Instant timeStamp = Instant.now();
-        Integer nonce = 1;
-        Boolean hasOverCharge = false;
-        String previousHash = "HashGenesis";
+        DeleteApplication deleteApplication = new DeleteApplication(
+                "appID"
+        );
 
-        BlockCreated blockCreatedEvent = new BlockCreated(
-                createBlockCommand.getApplicationID(),
-                createBlockCommand.getData(),
-                hash,
-                timeStamp,
-                nonce,
-                hasOverCharge,
-                previousHash
+        ApplicationDeleted applicationDeleted = new ApplicationDeleted(
+                "appID"
         );
 
         ApplicationRegistered applicationRegistered = new ApplicationRegistered(
-                blockCreatedEvent.getApplicationID(), "Prueba","soy una prueba",true,"101",Instant.now(),Instant.now()
+                "appID",
+                "Prueba",
+                "soy una prueba",
+                true,
+                "101",
+                Instant.now(),
+                Instant.now()
         );
 
         GenesisBlockCreated genesisBlockCreatedEvent = new GenesisBlockCreated(
                 "Genesis Block"
         );
 
-
         BDDMockito
                 .when(this.repositoryMock.findById(ArgumentMatchers.anyString()))
                 .thenReturn(Flux.just(new BlockChainCreated(
                         "098098098",
                         "Santiago Sierra"
-                ),genesisBlockCreatedEvent, applicationRegistered));
-
+                ), genesisBlockCreatedEvent, applicationRegistered));
 
         BDDMockito
                 .when(this.repositoryMock.saveEvent(ArgumentMatchers.any(DomainEvent.class)))
-                .thenReturn(Mono.just(blockCreatedEvent));
+                .thenReturn(Mono.just(applicationDeleted));
 
-        //Act
-        Mono<BlockHashResponse> savedEvents = this.usecase.apply(Mono.just(createBlockCommand));
+        Mono<List<DomainEvent>> savedEvents = this.usecase.apply(Mono.just(deleteApplication))
+                .collectList();
 
-
-        //Assert
         StepVerifier.create(savedEvents)
-                .expectNextMatches(events ->
-                        "ajdkjandaksjdnakj".equals(events.getHash()) )
+                .expectNextMatches(events -> {
+                            var event = (ApplicationDeleted) events.get(0);
+                            return event.getApplicationID().equals("appID") &&
+                                    events.size()== 1 &&
+                                    events.get(0) instanceof ApplicationDeleted;
+                        }
+                )
                 .verifyComplete();
 
         BDDMockito.verify(this.eventBusMock, BDDMockito.times(1))
@@ -104,7 +93,4 @@ class CreateBlockUseCaseTest {
         BDDMockito.verify(this.repositoryMock, BDDMockito.times(1))
                 .findById(ArgumentMatchers.anyString());
     }
-
-
-
 }

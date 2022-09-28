@@ -61,9 +61,13 @@ class CreateBlockChainUseCaseTest {
 
         //Assert
         StepVerifier.create(savedEvents)
-                .expectNextMatches(events ->
-                        events.size() == 2 && events.get(0) instanceof BlockChainCreated &&  events.get(1) instanceof GenesisBlockCreated )
-                .verifyComplete();
+                .expectNextMatches(events ->{
+                    var event = (BlockChainCreated) events.get(0);
+                    return event.getBlockChainId().equals("1") &&
+                            event.getBlockChainName().equals("Albertus")
+                            &&events.size() == 2 && events.get(0) instanceof BlockChainCreated
+                            &&  events.get(1) instanceof GenesisBlockCreated;
+                })  .verifyComplete();
 
         BDDMockito.verify(this.eventBusMock, BDDMockito.times(2))
                 .publish(ArgumentMatchers.any(DomainEvent.class));

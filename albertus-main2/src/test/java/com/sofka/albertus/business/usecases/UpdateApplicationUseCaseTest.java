@@ -1,15 +1,14 @@
 package com.sofka.albertus.business.usecases;
 
 import co.com.sofka.domain.generic.DomainEvent;
+import com.sofka.albertus.application.helpers.BlockHashResponse;
 import com.sofka.albertus.business.usecases.gateways.DomainEventRepository;
 import com.sofka.albertus.business.usecases.gateways.EventBus;
+import com.sofka.albertus.business.usecases.gateways.commands.CreateBlock;
 import com.sofka.albertus.business.usecases.gateways.commands.CreateBlockChain;
 import com.sofka.albertus.business.usecases.gateways.commands.RegisterApplication;
 import com.sofka.albertus.business.usecases.gateways.commands.UpdateApplication;
-import com.sofka.albertus.domain.events.ApplicationRegistered;
-import com.sofka.albertus.domain.events.ApplicationUpdated;
-import com.sofka.albertus.domain.events.BlockChainCreated;
-import com.sofka.albertus.domain.events.GenesisBlockCreated;
+import com.sofka.albertus.domain.events.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +21,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class UpdateApplicationUseCaseTest {
 
-/*
+
 
     @Mock
     private EventBus eventBusMock;
@@ -38,83 +39,78 @@ class UpdateApplicationUseCaseTest {
     private DomainEventRepository repositoryMock;
 
     @InjectMocks
-    private UpdateApplicationUseCase useCaseMock;
+    private UpdateApplicationUseCase usecase;
 
     @Test
     @DisplayName("updateApplicationUseCaseTest. Should save both events and publish to Rabbit")
     void updateApplicationUseCaseTest(){
 
-        //Arrange
-        CreateBlockChain createBlockChainCommand = new CreateBlockChain(
-                "1", "Albertus"
+        UpdateApplication updateApplication = new UpdateApplication(
+                "appID",
+                "Prueba",
+                "soy una prueba"
         );
 
-        BlockChainCreated blockChainCreatedEvent = new BlockChainCreated(
-                createBlockChainCommand.getBlockChainId(),
-                createBlockChainCommand.getBlockChainName()
-        );
-
-        RegisterApplication registerApplicationCommand = new RegisterApplication(
-                "Original Application Name",
-                "Original Description"
+        ApplicationUpdated applicationUpdated = new ApplicationUpdated(
+                "appID",
+                "name changed",
+                "descriptionchanged"
         );
 
         ApplicationRegistered applicationRegistered = new ApplicationRegistered(
-                registerApplicationCommand.getNameApplication(),
-                registerApplicationCommand.getDescription(),
+                "appID",
+                "Prueba",
+                "soy una prueba",
                 true,
-                "userId"
+                "101",
+                Instant.now(),
+                Instant.now()
         );
 
-
-        UpdateApplication updateApplicationCommand = new UpdateApplication(
-                "12345",
-                "Application name amended",
-                "This is the description just amended"
-        );
-
-
-        ApplicationUpdated applicationUpdated = new ApplicationUpdated(
-                updateApplicationCommand.getApplicationID(),
-                updateApplicationCommand.getNameApplication(),
-                updateApplicationCommand.getDescription()
+        GenesisBlockCreated genesisBlockCreatedEvent = new GenesisBlockCreated(
+                "Genesis Block"
         );
 
 
         BDDMockito
                 .when(this.repositoryMock.findById(ArgumentMatchers.anyString()))
-                .thenReturn(Flux.just(blockChainCreatedEvent, applicationRegistered));
+                .thenReturn(Flux.just(new BlockChainCreated(
+                        "098098098",
+                        "Santiago Sierra"
+                ),genesisBlockCreatedEvent, applicationRegistered));
 
 
         BDDMockito
                 .when(this.repositoryMock.saveEvent(ArgumentMatchers.any(DomainEvent.class)))
                 .thenReturn(Mono.just(applicationUpdated));
 
-
-
         //Act
-        Mono<List<DomainEvent>> savedEvents = this.useCaseMock.apply(Mono.just(updateApplicationCommand))
+        Mono<List<DomainEvent>> savedEvents = this.usecase.apply(Mono.just(updateApplication))
                 .collectList();
+
 
         //Assert
         StepVerifier.create(savedEvents)
-                .expectNextMatches(events ->
-                        events.size() == 3 && events.get(0) instanceof BlockChainCreated &&
-                                events.get(1) instanceof ApplicationRegistered &&
-                                events.get(2) instanceof ApplicationUpdated)
+                .expectNextMatches(events ->{
+                    var event = (ApplicationUpdated) events.get(0);
+                    return event.getApplicationID().equals("appID")
+                            && event.getNameApplication().equals("name changed")
+                            && event.getDescription().equals("descriptionchanged")
+                            &&events.size()==1 && events.get(0) instanceof ApplicationUpdated;
+                })
+
                 .verifyComplete();
 
         BDDMockito.verify(this.eventBusMock, BDDMockito.times(1))
                 .publish(ArgumentMatchers.any(DomainEvent.class));
 
-        BDDMockito.verify(this.repositoryMock, BDDMockito.times(2))
+        BDDMockito.verify(this.repositoryMock, BDDMockito.times(1))
                 .saveEvent(ArgumentMatchers.any(DomainEvent.class));
 
         BDDMockito.verify(this.repositoryMock, BDDMockito.times(1))
                 .findById(ArgumentMatchers.anyString());
-
     }
 
-*/
+
 
 }
